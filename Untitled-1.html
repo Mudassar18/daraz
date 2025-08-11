@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daraz Clone</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        /* Header */
+        header {
+            background-color: #f64c19;
+            padding: 10px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        nav .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+        nav .search-bar input {
+            padding: 8px;
+            width: 300px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        nav .search-bar button {
+            padding: 8px;
+            background-color: #f0a500;
+            border: none;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        nav .cart {
+            font-size: 24px;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* Category Bar */
+        .category-bar {
+            display: flex;
+            justify-content: center;
+            background-color: #f4f4f4;
+            padding: 10px 0;
+        }
+        .category-item {
+            padding: 15px 30px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .category-item:hover {
+            background-color: #f64c19;
+            color: white;
+        }
+
+        /* Product List */
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 20px 30px;
+            background-color: white;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .product-card {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .product-card img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-card .price {
+            font-size: 18px;
+            color: #f64c19;
+            margin: 10px 0;
+        }
+        .product-card button {
+            background-color: #f0a500;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .product-card button:hover {
+            background-color: #e08900;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f4f4f4;
+            padding: 20px;
+            text-align: center;
+        }
+        footer a {
+            margin: 0 10px;
+            color: #555;
+            text-decoration: none;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">Daraz</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for products...">
+                <button onclick="searchProducts()">Search</button>
+            </div>
+            <div class="cart">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-count">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Categories -->
+    <div class="category-bar">
+        <div class="category-item" onclick="showCategory('electronics')">Electronics</div>
+        <div class="category-item" onclick="showCategory('fashion')">Fashion</div>
+        <div class="category-item" onclick="showCategory('home')">Home</div>
+        <div class="category-item" onclick="showCategory('beauty')">Beauty</div>
+        <div class="category-item" onclick="showCategory('sports')">Sports</div>
+    </div>
+
+    <!-- Product List -->
+    <div class="product-list" id="product-list"></div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Daraz Clone</p>
+        <a href="#">About Us</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy Policy</a>
+    </footer>
+
+    <script>
+        // Product data for categories
+        const products = {
+            electronics: [
+                { name: 'Smartphone', price: 250, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Laptop', price: 600, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Headphones', price: 50, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Smartwatch', price: 120, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' }
+            ],
+            fashion: [
+                { name: 'T-shirt', price: 20, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Jeans', price: 40, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Jacket', price: 70, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' }
+            ],
+            home: [
+                { name: 'Sofa', price: 300, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Dining Table', price: 150, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Lamps', price: 40, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' }
+            ],
+            beauty: [
+                { name: 'Lipstick', price: 10, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Perfume', price: 50, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Shampoo', price: 5, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' }
+            ],
+            sports: [
+                { name: 'Football', price: 15, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Tennis Racket', price: 30, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' },
+                { name: 'Yoga Mat', price: 20, image: 'https://i.etsystatic.com/35655385/r/il/5deed4/4192652455/il_570xN.4192652455_mgta.jpg' }
+            ]
+        };
+
+        let currentCategory = 'electronics';
+
+        function showCategory(category) {
+            currentCategory = category;
+            showCategoryProducts(category);
+        }
+
+        function showCategoryProducts(category) {
+            const productList = document.getElementById('product-list');
+            productList.innerHTML = ''; // Clear current products
+            products[category].forEach(product => {
+                productList.innerHTML += `
+                    <div class="product-card">
+                        <img src="${product.image}" alt="${product.name}">
+                        <h3>${product.name}</h3>
+                        <p class="price">$${product.price}</p>
+                        <button onclick="addToCart()">Add to Cart</button>
+                    </div>
+                `;
+            });
+        }
+
+        function addToCart() {
+            let cartCount = document.getElementById('cart-count').innerText;
+            document.getElementById('cart-count').innerText = parseInt(cartCount) + 1;
+        }
+
+        // Load default category
+        window.onload = function() {
+            showCategoryProducts(currentCategory);
+        };
+    </script>
+
+</body>
+</html>
